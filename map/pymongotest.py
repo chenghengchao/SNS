@@ -5,21 +5,21 @@ import os
 import re
 import string
 
-
+# 建立Mysql连接 返回connection
 def getMySqlConn():
     sqlconn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
     # cur = sqlconn.cursor()
     # sqlconn.select_db('sns')
     return sqlconn
 
-
+# 建立MongoDb 连接，返回connection
 def getMongoConn():
     conn = pymongo.MongoClient('202.112.113.203', 27017)
     # db = conn['travel']
     # beijingInfo = db['travel_beijing_detail']
     return conn
 
-
+# 计算时间的平均值
 def computeTime():
     connection = getMySqlConn()
     cur = connection.cursor()
@@ -49,19 +49,17 @@ def computeTime():
     cur.close()
     connection.close()
 
+# 从mongodb中读取时间，并存入mysql中sence表的manytime字段
 def updateManyTime():
     conn = getMongoConn()
     db = conn['travel']
     beijingInfo = db['travel_beijing_detail']
 
-# sqlconn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
     sqlconn = getMySqlConn()
     cur = sqlconn.cursor()
     sqlconn.select_db('sns')
-# all = beijingInfo.find().sort('title', -1)
     all = beijingInfo.find({'destination':u'北京'})
 
-# print all
     sql = "select name from scenes"
     scenes = cur.execute(sql)
     scenesRs = cur.fetchall()
@@ -95,33 +93,16 @@ def updateManyTime():
                                 theTime = theTime[:1000]
                             sceneDict[tempName].append(theTime)
                             cur.execute("update sns.scenes set manytime='" + ' '.join(sceneDict[tempName])+"' where name='"+ tempName+"'")
-                        # tempManyTime = cur.execute("select manytime from scenes")
-                        # tempRes = cur.fetchall()
-
-
-
-                        # cur.execute("update sns.scenes set time='" + ' '.join(sceneDict[tempName])+"' where name='"+ tempName+"'")
-
-                        # cur.commit()
-
     print count
 # for k, v in sceneDict.items():
 #     print k, v
-
-    # scenes=i['modifypath'].split('-')
-    # for j in range(0,len(scenes)):
-    #     print 'select * from modify_scenes where name="'+scenes[j]+'"'
-    #     count=cur.execute('select * from modify_scenes where name="'+scenes[j]+'"')
-    #     if count==0 and scenes[j]!='':
-    #         cur.execute('insert into modify_scenes(name) values("'+scenes[j]+'")')
-
 
     sqlconn.commit()
     sqlconn.close()
     cur.close()
     conn.close()
 
-
+# 将表scene的时间转换到modifyScene表
 def transferTime():
     connection = getMySqlConn()
     cur = connection.cursor()
@@ -137,9 +118,11 @@ def transferTime():
     connection.commit()
     connection.close()
 
+# main函数
 if __name__ == '__main__':
     # computeTime()
-    transferTime()
+    # transferTime()
+    updateManyTime()
 
 
 
