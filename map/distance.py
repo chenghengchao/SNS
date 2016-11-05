@@ -6,6 +6,7 @@ from baidumap import BaiduMap
 import os
 import sys
 
+# 填充distance表中的距离，运行前需要先清空distance表
 # sys.setdefaultencoding('utf-8')
 # reload sys
 
@@ -88,6 +89,7 @@ try:
                 distance = haversine(latlist[tmplat], lnglist[tmplat], latlist[tmplng], lnglist[tmplng])
     # print "distance:"
                 print distance
+                # cur.execute("truncate table sns.distance")
                 cur.execute("insert into sns.distance(fromid, toid, distance) values('%d', '%d', '%f')" % (tmplat+1, tmplng+1, float(distance)))
     # os._exit(0)
     conn.commit()
