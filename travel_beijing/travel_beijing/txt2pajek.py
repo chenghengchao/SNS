@@ -5,22 +5,8 @@ import random
 conn=MySQLdb.connect(host='202.112.113.203',user='sxw',passwd='0845',port=3306,charset='utf8')
 cur=conn.cursor()
 conn.select_db('sns')
-arr = np.zeros([190,190]) # all zero
-file=open('pajek.txt','wb+')
-file.write('*Vertices 190\n')
+arr = np.zeros([167,167]) # all zero
 
-for i in range(1,191):
-
-    cur.execute('select name,lat,lng from modify_scenes where id='+str(i))
-    scene=cur.fetchone()
-    nodeid=scene[0]
-    lat=scene[1]
-    lng=scene[2]
-    file.write(str(i)+' "'+str(nodeid)+'" '+str(lng)+' '+str(lat)+' 0')
-    file.write('\n')
-
-
-file.write('*Matrix \n')
 
 for line in open('graph.txt'):
     if '#' in line:

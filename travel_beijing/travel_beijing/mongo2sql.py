@@ -13,10 +13,10 @@ all=beijinginfo.find().sort('title',-1)
 for i in all:
     scenes=i['modifypath'].split('-')
     for j in range(0,len(scenes)):
-        print 'select * from modify_scenes where name="'+scenes[j]+'"'
-        count=cur.execute('select * from modify_scenes where name="'+scenes[j]+'"')
+        print 'select * from modify_scenes_v1 where name="'+scenes[j]+'"'
+        count=cur.execute('select * from modify_scenes_v1 where name="'+scenes[j]+'"')
         if count==0 and scenes[j]!='':
-            cur.execute('insert into modify_scenes(name) values("'+scenes[j]+'")')
+            cur.execute('insert into modify_scenes_v1(name) values("'+scenes[j]+'")')
 
 
 sqlconn.commit()
