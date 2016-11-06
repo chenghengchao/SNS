@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 # os.chdir('C:\\Users\\XXX\\Desktop\\')
 
 def getMySqlConn():
+    '''获得数据库连接并返回'''
     sqlconn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
     # cur = sqlconn.cursor()
     # sqlconn.select_db('sns')
@@ -13,6 +14,7 @@ def getMySqlConn():
 
 
 def getNodeWeight():
+    '''读取数据库获得节点的权重，返回nodeImportance：dict{id:weight}'''
     conn = getMySqlConn()
     cur = conn.cursor()
     conn.select_db('sns')
@@ -28,6 +30,7 @@ def getNodeWeight():
 
 
 def getEdgeWeight():
+    '''读取数据库获得边的权重，返回归一化之后的edgeImportance：dict{(from,to):weight}'''
     conn = getMySqlConn()
     cur = conn.cursor()
     conn.select_db('sns')
@@ -44,13 +47,12 @@ def getEdgeWeight():
     for k, v in edgeImportance.items():
         edgeImportance[k] = v / sum2
 
-
-
     conn.commit()
     conn.close()
     return edgeImportance
 
 def computePagerank():
+    '''读取数据库并建立有向图，调用networkx计算pagerank值，返回pr：dict{id:pagerank}'''
     pk = 0
     elist = []
     G = nx.DiGraph()
@@ -70,7 +72,17 @@ def computePagerank():
 
     return pr
 
-    # return pk
+
+def savePr2db(pr):
+    '''保存pagerank值到数据库中modify_scenes_v1的pagerank字段， pr:dict{id:pagerank}'''
+    conn = getMySqlConn()
+    cur = conn.cursor()
+    conn.select_db('sns')
+    for k, v in pr.items():
+        cur.execute("update sns.modify_scenes_v1 set pagerank =" + str(v) +"where id = "+str(k))
+
+    conn.commit()
+    conn.close()
 
 if __name__ =='__main__':
     nodeImportance = getNodeWeight()
@@ -90,6 +102,8 @@ if __name__ =='__main__':
     pr = computePagerank()
     print "*" * 15
     print pr
+
+    savePr2db(pr)
 
         # filename = 'CA-HepPh.txt'
         # G = nx.DiGraph()
