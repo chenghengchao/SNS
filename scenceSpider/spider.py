@@ -4,20 +4,20 @@ import urllib
 from bs4 import BeautifulSoup
 import MySQLdb
 
-baseUrl = 'http://s.visitbeijing.com.cn/index.php'
-user_agent = 'User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0'
-headers = {'User-Agent': user_agent}
-values = {
-    'm': 'content',
-    'c': 'search',
-    'catid': 7,
-    'theme': 0,
-    'area': 0,
-    'crowd': 0,
-    'level': 0,
-    'ticselect': 0,
-    'page': 1
-}
+# baseUrl = 'http://s.visitbeijing.com.cn/index.php'
+# user_agent = 'User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0'
+# headers = {'User-Agent': user_agent}
+# values = {
+#     'm': 'content',
+#     'c': 'search',
+#     'catid': 7,
+#     'theme': 0,
+#     'area': 0,
+#     'crowd': 0,
+#     'level': 0,
+#     'ticselect': 0,
+#     'page': 1
+# }
 def getContent(page):
     '''获取网页信息'''
     # values = {'name': 'Michael Foord',
@@ -39,8 +39,8 @@ def getContent(page):
     return the_page
 
 
-
 def parseContent(content):
+    '''解析网页'''
     soup = BeautifulSoup(content, "lxml")
     scenceList = soup.select('div.list')
     # save2file(scenceList)
@@ -105,8 +105,8 @@ def parseContent(content):
         save2db(name, url, grade, price, guide, address, spe)
 
 
-
 def spider():
+    '''循环爬取'''
     for i in range(107):
         if i == 0:
             continue
@@ -115,6 +115,7 @@ def spider():
 
 
 def save2db(name, url, grade, price, guide, address, spe):
+    '''保存到数据库'''
     conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
     cur = conn.cursor()
     conn.select_db('sns')
@@ -126,12 +127,14 @@ def save2db(name, url, grade, price, guide, address, spe):
 
 
 def save2file(filename, content):
+    '''没什么用'''
     f = open(filename, 'wb+')
     f.write(content)
     f.close()
 
 
 if __name__ == '__main__':
+    '''主函数'''
     # content = getContent(3)
     # parseContent(content)
     spider()
