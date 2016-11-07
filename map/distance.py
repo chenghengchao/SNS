@@ -40,7 +40,7 @@ try:
 
     i=0
     #city='北京'.decode('ut')
-    scenes = cur.execute('select name from sns.modify_scenes')
+    scenes = cur.execute('select name from sns.modify_scenes_v1')
     results = cur.fetchall()
     # count=cur.execute('SELECT * FROM atmo.location where lat <> 39.9299857780;')
     # results1=cur.fetchall()
@@ -73,8 +73,8 @@ try:
             # print "lng:" +lat
             latlist.append(float(lat))
         # cur.execute("insert into sns.modify_scenes(reallng,reallat) values('%f','%f')" % (float(lng), float(lat)))
-        cur.execute("update sns.modify_scenes set reallng = "+str(lng) +"where id = "+str(ind+1))
-        cur.execute("update sns.modify_scenes set reallat = "+str(lat) +"where id = "+str(ind+1))
+        cur.execute("update sns.modify_scenes_v1 set reallng = "+str(lng) +"where id = "+str(ind+1))
+        cur.execute("update sns.modify_scenes_v1 set reallat = "+str(lat) +"where id = "+str(ind+1))
     conn.commit()
     # os._exit(0)
     # 先测试前两个
