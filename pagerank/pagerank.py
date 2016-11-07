@@ -21,9 +21,11 @@ def getNodeWeight():
     cur.execute('select id, nodeimportance from modify_scenes_v1')
     res = cur.fetchall()
     nodeImportance = {}
+    sum=0
     for r in res:
-        nodeImportance[int(r[0])] = int(r[1])
-
+        # sum=sum+float(r[1])
+        nodeImportance[int(r[0])] = float(r[1])
+    # nodeImportance[1]=nodeImportance[1]+(1-sum)
     conn.commit()
     conn.close()
     return nodeImportance
@@ -44,8 +46,8 @@ def getEdgeWeight():
         edgeImportance[(r[0], r[1])] = r[2]
         sum2 = sum2 + r[2]
 
-    for k, v in edgeImportance.items():
-        edgeImportance[k] = v / sum2
+    # for k, v in edgeImportance.items():
+    #     edgeImportance[k] = v / sum2
 
     conn.commit()
     conn.close()
@@ -67,8 +69,8 @@ def computePagerank():
         # G.add_weighted_edges_from([(fromNode, toNode, value),])
     print elist
     G.add_weighted_edges_from(elist)
-    # pr = nx.pagerank(G, alpha=0.85, personalization=nodeImportance, nstart=nodeImportance)
-    pr = nx.pagerank(G, alpha=0.85)
+    pr = nx.pagerank(G, alpha=0.85, personalization=nodeImportance, nstart=nodeImportance,max_iter=1000)
+    # pr = nx.pagerank(G, alpha=0.85)
 
     return pr
 
@@ -79,7 +81,11 @@ def savePr2db(pr):
     cur = conn.cursor()
     conn.select_db('sns')
     for k, v in pr.items():
-        cur.execute("update sns.modify_scenes_v1 set pagerank =" + str(v) +"where id = "+str(k))
+        try:
+            cur.execute("update sns.modify_scenes_v1 set pagerank =" + str(v) +"where id = "+str(k))
+        except:
+            cur.execute("update sns.modify_scenes_v1 set pagerank =0 where id = "+str(k))
+            continue
 
     conn.commit()
     conn.close()
@@ -89,14 +95,15 @@ if __name__ =='__main__':
     sum = 0
     for k, v in nodeImportance.items():
         sum = sum + v
-        print k, v
+        #print k, v
+
     print "sum: " + str(sum)
     print "==========="
     sum2 = 0
     edgeImportance = getEdgeWeight()
     for k, v in edgeImportance.items():
         sum2 = sum2 + v
-        print k, v
+        #print k, v
     print "sum2: " + str(sum2)
     print len(edgeImportance) #1341
     pr = computePagerank()
