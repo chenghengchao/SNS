@@ -132,10 +132,6 @@ def spider():
     conn.close()
 
 
-    pass
-
-
-
 def save2db(name, danSeason, wangSeason, tip, phone, besttime, visittime, facilities, info):
     '''保存到数据库'''
     conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
