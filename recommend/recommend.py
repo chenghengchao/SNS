@@ -36,34 +36,35 @@ def getAllPath(fromid, cost=8):
     tmpList = tmpDict[fromid]
     # print tmpList
     if len(tmpList) == 1:
-        print "0"
+        # print "0"
         path = str(fromid) + '-->' + str(tmpList[0][0])
-        print path
+        # print path
         paths.add(path)
+    else:
+        for tp in tmpList:
+            # if len(tmpList) == 1:
+            #     print str(fromid) + '-->' + str(tp[0])
+            #     return str(fromid) + '-->' + str(tp[0])
+            curCost = 0
+            path = path + '-->' + str(tp[0])
 
-    for tp in tmpList:
-        # if len(tmpList) == 1:
-        #     print str(fromid) + '-->' + str(tp[0])
-        #     return str(fromid) + '-->' + str(tp[0])
-        curCost = 0
-        path = path + '-->' + str(tp[0])
-
-        curCost = curCost + tp[1]
-        if curCost > cost:
-            # if tp[0] == 167
-            print "1"
-            print path
-            paths.add(path)
-            # return path
-        elif tp[0] == 167:
-            print "2"
-            print path
-            paths.add(path)
-            # return
-        else:
-            getAllPath(tp[0])
-    print "set start"
-    print paths
+            curCost = curCost + tp[1]
+            if curCost > cost:
+                # if tp[0] == 167
+                # print "1"
+                # print path
+                paths.add(path)
+                # return path
+            elif tp[0] == 167:
+                # print "2"
+                # print path
+                paths.add(path)
+                # return
+            else:
+                getAllPath(tp[0])
+    # print "set start"
+    # print paths
+    return paths
 
     # class Node:
     #     fromNode = ""
@@ -84,7 +85,7 @@ def getDataFromDb():
     conn.select_db('sns')
     # cur.execute("insert into sns.distance(fromid, toid, distance) values('%d', '%d', '%f')" % (tmplat + 1, tmplng + 1, float(distance)))
     # cur.execute("insert into sns.scenes_list(name, url, grade, price, guide, address, special) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (name, url, grade, price, guide, address, spe))
-    cur.execute("select fromid, toid, edgecost from distance where fromid > 150")
+    cur.execute("select fromid, toid, edgecost from distance ")
     result = cur.fetchall()
     fromNodeList = {}
     costList = {}
@@ -125,4 +126,7 @@ if __name__ == '__main__':
     # print isequal(a, e)
     # getDataFromDb()
 
-    getAllPath(162)
+    print getAllPath(1)
+
+
+
