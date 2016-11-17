@@ -1,0 +1,2 @@
+1. 更改排序规则 ALTER TABLE scenes_list CONVERT TO CHARACTER SET utf8 collate utf8_unicode_ci
+2. 联表查询 update scenes_list INNER JOIN scenes_info on scenes_list.url = scenes_info.name SET scenes_list.ticket = scenes_info.ticket
