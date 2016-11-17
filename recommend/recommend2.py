@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import numpy as np
@@ -91,16 +92,20 @@ def dateupdate():
 
 
 
-def getallpath(tmpDict,curlist,cost=8):
+def getallpath(curlist,cost=8):
     removelist=[]
+    conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
+    cur = conn.cursor()
+    conn.select_db('sns')
     for i in range(0,len(curlist)):
         flag=False
         path=curlist[i][1:]
         fromid=path[len(path)-1]
-        edges=tmpDict[fromid]
+        cur.execute('select toid,edgecost from distance where distance<5 and fromid='+str(fromid)+' order by pagerank desc')
+        edges=cur.fetchmany(5)
         for edge in edges:
             if not edge[0] in path and (curlist[i][0]+edge[1])<cost:
-                curlist.append([curlist[i][0]+edge[1]]+path+[edge[0]])
+                curlist.append([curlist[i][0]+edge[1]]+path+[int(edge[0])])
                 flag=True
         if flag:
             removelist.append(i)
@@ -118,6 +123,54 @@ def getallpath(tmpDict,curlist,cost=8):
         return curlist,True
 
 
+def duplicatepath(allpath):
+    for i in range(0,len(allpath)):
+        allpath[i]=allpath[i][1:]
+    print type(allpath)
+
+    tmpset=[]
+    newpath=[]
+    for i in allpath:
+        subset=set(i)
+        if not subset in tmpset:
+            tmpset.append(subset)
+            newpath.append(i)
+    return newpath
+
+def getmincost(allpath):
+    for i in allpath:
+        path=[]
+        min=100000
+        cost=0
+        minpath=''
+        for scene in i:
+
+            path.append(tmpDict[scene][0])
+            cost=cost+tmpDict[scene][1]
+        path='-->'.join(path)
+
+        if cost<min:
+            min=cost
+            minpath=path
+    return minpath,min
+
+def getmaximportant(allpath):
+    for i in allpath:
+        path=[]
+        max=0
+        cost=0
+        maxpath=''
+        for scene in i:
+
+            path.append(tmpDict[scene][0])
+            cost=cost+tmpDict[scene][2]
+        path='-->'.join(path)
+        cost=cost/len(i)
+        print cost
+        if cost>max:
+            max=cost
+            maxpath=path
+    return maxpath
 
 
 def getDataFromDb():
@@ -133,16 +186,19 @@ def getDataFromDb():
     costList = {}
     for res in result:
         fromid = res[0]
-        tmpList = []
-        tolist = []
-        fromNodeList[fromid] = []
 
-        cur.execute("select toid, edgecost from distance where distance<5 and fromid = " + str(fromid))
+
+        cur.execute("select name,price,pagerank from modify_scenes_v1 where id= " + str(fromid))
         tmpRs = cur.fetchall()
         for rs in tmpRs:
-            tmp = (int(rs[0]), float(rs[1]))
-            tolist.append(tmp)
-            fromNodeList[fromid].append(tmp)
+            price =rs[1]
+            if len(price)>1:
+                price=int(price[:-2])
+            else:
+                price=0
+            pagerank=float(rs[2])
+
+            fromNodeList[fromid]=[rs[0],price,pagerank]
 
     # for i, j in fromNodeList.items():
     #     print i, j
@@ -168,15 +224,23 @@ if __name__ == '__main__':
     # print isequal(a, e)
     # getDataFromDb()
     tmpDict = getDataFromDb()
-    allpath=[[2,2]]
+    print tmpDict
+    allpath=[[2,6]]
     flag=True
     temp=allpath
     while flag:
-        allpath,flag=getallpath(tmpDict,temp,6)
+        allpath,flag=getallpath(temp,8)
 
         temp=allpath
-    for i in allpath:
-        print i
+
+
+    allpath=duplicatepath(allpath)
+    mincostpath,mincost=getmincost(allpath)
+    maximportantpath=getmaximportant(allpath)
+
+    print mincostpath
+    print maximportantpath
+
     #dateupdate()
 
 
