@@ -3,6 +3,7 @@ import urllib2
 import urllib
 from bs4 import BeautifulSoup
 import MySQLdb
+import os
 
 # baseUrl = 'http://s.visitbeijing.com.cn/index.php'
 user_agent = 'User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36 SE 2.X MetaSr 1.0'
@@ -68,6 +69,12 @@ def parseContent(content):
         href = i.select('a')
         # print href
         url = href[0]['href'] #景点链接
+        print url
+        # img = i.select('img')
+        # imgurl = img[0]['src']
+        # print imgurl
+
+        os._exit(0)
 
         conn = conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
         cur = conn.cursor()
@@ -167,6 +174,6 @@ def save2file(filename, content):
 
 if __name__ == '__main__':
     '''主函数'''
-    # content = getContent(3)
-    # parseContent(content)
-    spider()
+    content = getContent(1)
+    parseContent(content)
+    # spider()
