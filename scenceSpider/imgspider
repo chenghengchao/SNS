@@ -70,76 +70,26 @@ def parseContent(content):
         # print href
         url = href[0]['href'] #景点链接
         print url
-        # img = i.select('img')
-        # imgurl = img[0]['src']
-        # print imgurl
+        img = i.select('img')
+        imgurl = img[0]['src']
+        print imgurl
 
-        os._exit(0)
+        # os._exit(0)
 
         conn = conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
         cur = conn.cursor()
         conn.select_db('sns')
-        if cur.execute("select url from scenes_list where url='"+url+"'") > 0:
-            print "here"
-            continue
+        cur.execute("update sns.scenes_list set imgurl ='"+imgurl+"' where url ='"+url+"'")
+        conn.commit()
+        cur.close()
+        conn.close()
 
 
-        print url
-        node = i.select('div.fr > p')
-        # print node
-        name = ""
-        grade = ""
-        price = ""
-        guide = ""
-        address = ""
-        nodelen = len(node)
-        for index, p in enumerate(node):
-            if index == 0:
-                # text = p.get_text()
-                name = p.select('a')[0].get_text()
-                grade = p.select('span')[0].get_text()
-            if index == 1:
-                tmptx = p.get_text()
-                if u'价格' in tmptx:
-                    price = tmptx.strip()
-                else:
-                    price = u"无"
-            if index == nodelen - 2:
-                tmptx = p.get_text()
-                if u'导语' in tmptx:
-                    guide = tmptx.strip()
-                else:
-                    guide = u"无"
-                # guide = p.get_text()
-            if index == nodelen - 1:
-                tmptx = p.get_text()
-                if u'地址' in tmptx:
-                    address = tmptx.strip()
-                else:
-                    address = u"无"
-                # address = p.get_text()
-        print name + '--' +grade + '--' + price + '--' +guide + '--' + address
-
-        special = i.select('div.fr > ul')
-        if special:
-            for m in special:
-                spe = ""
-                spicialli = m.select('li')
-                for ind, k in enumerate(spicialli):
-                    # spe = []
-                    if ind % 2 != 0:
-                        # print "~~~~~~~~~~~"
-                        # print k.get_text()
-                        # spe.append(str(k.get_text()))
-                        spe = spe + "|" + k.get_text().strip('\n') # 特色
-        else:
-            spe = ""
-        print spe
-            # special = ''.join(spe)
-        # print special
-
-        print '--'*15
-        save2db(name, url, grade, price, guide, address, spe)
+        # if cur.execute("select url from scenes_list where url='"+url+"'") > 0:
+        #     print "here"
+        #     continue
+        
+        # save2db(name, url, grade, price, guide, address, spe)
 
 
 def spider():
@@ -174,6 +124,6 @@ def save2file(filename, content):
 
 if __name__ == '__main__':
     '''主函数'''
-    content = getContent(1)
-    parseContent(content)
-    # spider()
+    # content = getContent(1)
+    # parseContent(content)
+    spider()
