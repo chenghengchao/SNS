@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{{url_for('static', filename='first/js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='first/js/classie.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/component.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/demo.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/normalize.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/style.css')}}" />
+
+</head>
+<style>
+    #main-content{margin-left:20%;width:60%;padding-left:10%}
+    .blank{margin-left:5%}
+</style>
+<body>
+    <div id="main-content">
+        <section class="content bgcolor-6">
+            <form method="post" action="http://localhost:5000/output_args" id="form1">
+                <input type="hidden" name="argpeople" value="{{argpeople}}" id="argpeople">
+                <input type="hidden" name="strategys" value="{{strategys}}">
+                <input type="hidden" name="people" value="{{people}}" id="people">
+                <input type="hidden" name="rounds" value="{{time}}">
+        {% for i in needargs %}
+            <span style="color:white">为参赛者{{i}}选择参数:</span>
+            <section>
+
+				<span class="input input--kuro">
+					<input class="input__field input__field--kuro" type="text" id="{{i}}M" name="{{i}}M" style="color:white;font-size:18" />
+					<label class="input__label input__label--kuro" for="{{i}}M">
+						<span class="input__label-content input__label-content--kuro">M</span>
+					</label>
+				</span>
+				<span class="input input--kuro">
+					<input class="input__field input__field--kuro" type="text" id="{{i}}N" name="{{i}}N" style="color:white;font-size:18" />
+					<label class="input__label input__label--kuro" for="{{i}}N">
+						<span class="input__label-content input__label-content--kuro">N</span>
+					</label>
+				</span>
+
+			</section>
+
+            <!--<span id="timedown"><font size="16">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></span>
+            <span><font size="16">20</font></span>
+            <span id="timeup"><font size="16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+</font></span><br />-->
+            {%endfor%}
+            </form>
+        <br />
+
+            <span class="blank" id="button" >
+            <a  class="btn" >开始比赛</a>
+            </span>
+
+        </section>
+        </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#button").bind("click",function(){
+                $("#form1").submit();
+            });
+           if (!String.prototype.trim) {
+					(function() {
+						// Make sure we trim BOM and NBSP
+						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+						String.prototype.trim = function() {
+							return this.replace(rtrim, '');
+						};
+					})();
+				}
+
+				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+					// in case the input is already filled..
+					if( inputEl.value.trim() !== '' ) {
+						classie.add( inputEl.parentNode, 'input--filled' );
+					}
+
+					// events:
+					inputEl.addEventListener( 'focus', onInputFocus );
+					inputEl.addEventListener( 'blur', onInputBlur );
+				} );
+
+				function onInputFocus( ev ) {
+					classie.add( ev.target.parentNode, 'input--filled' );
+				}
+
+				function onInputBlur( ev ) {
+					if( ev.target.value.trim() === '' ) {
+						classie.remove( ev.target.parentNode, 'input--filled' );
+					}
+				}
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <img class="maquee">
+            <ul>
+                {%
+                    for i in range(0,len) %}
+                <li>
+                    <div>{{name[i]}}</div>
+                    <div>{{price[i]}}</div>
+                    <div>{{intro[i]}}</div>
+                    <div>{{special[i]}}</div>
+                    <div>{{address[i]}}</div>
+                    <img src={{pic[i]}} />
+
+
+                </li>
+                </ul>
+        {%endfor%}
+      </div>
+</body>
+</html>

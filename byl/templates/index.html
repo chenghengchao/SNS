@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{{url_for('static', filename='first/js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='first/js/classie.js')}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/component.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/demo.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/normalize.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/style.css')}}" />
+
+</head>
+<style>
+    #main-content{margin-left:30%;width:40%;padding-left:10%}
+    .blank{margin-left:5%;width:35%}
+</style>
+<body>
+    <div id="main-content">
+        <section class="content bgcolor-6">
+
+            <span class="input input--juro">
+					<input class="input__field input__field--juro" type="text" id="input-28" />
+					<label class="input__label input__label--juro" for="input-28">
+						<span class="input__label-content input__label-content--juro">比赛人数</span>
+					</label>
+				</span>
+            <span id="peopleinfo"></span>
+            <!--<span id="peopledown"><font size="16">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></span>
+            <span><font size="16" id="peoplecount">2</font></span>
+            <span id="peopleup"><font size="16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+</font></span><br />-->
+            <br /><br />
+
+            <span class="input input--juro">
+					<input class="input__field input__field--juro" type="text" id="input-29" />
+					<label class="input__label input__label--juro" for="input-29">
+						<span class="input__label-content input__label-content--juro">比赛轮次</span>
+					</label>
+				</span>
+            <span id="timeinfo"></span>
+            <!--<span id="timedown"><font size="16">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></span>
+            <span><font size="16">20</font></span>
+            <span id="timeup"><font size="16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+</font></span><br />-->
+
+        <br />
+
+            <span class="blank" id="button" >
+            <a  class="btn" >指定策略</a>
+            </span>
+            <span class="blank" id="button1" >
+            <a  class="btn" >随机策略</a>
+            </span>
+        </section>
+        </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $("#button1").bind("click",function(){
+                window.location.href="http://localhost:5000/output_random?people="+$("#input-28").val()+"&time="+$("#input-29").val();
+            });
+
+            $("#button").bind("click",function(){
+                $.ajax({
+                    type:"POST",
+                    url:"http://localhost:5000/next",
+                    contentType: "application/json;charset=utf-8",
+                    dataType:"json",
+                    data: JSON.stringify({
+                        'people':$("#input-28").val(),
+                        'time':$("#input-29").val()
+                    }),
+                    success:function(data){
+                            var info=eval(data);
+                            if(info['people']=='' && info['time']==''){
+                                window.location.href="http://localhost:5000/strategy?people="+$("#input-28").val()+"&time="+$("#input-29").val()
+                            }
+                            else{
+                                $("#peopleinfo").text(info['people']);
+                                $("#timeinfo").text(info['time'])
+                            }
+                    }
+
+                });
+
+            });
+
+            if (!String.prototype.trim) {
+					(function() {
+						// Make sure we trim BOM and NBSP
+						var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+						String.prototype.trim = function() {
+							return this.replace(rtrim, '');
+						};
+					})();
+				}
+
+				[].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+					// in case the input is already filled..
+					if( inputEl.value.trim() !== '' ) {
+						classie.add( inputEl.parentNode, 'input--filled' );
+					}
+
+					// events:
+					inputEl.addEventListener( 'focus', onInputFocus );
+					inputEl.addEventListener( 'blur', onInputBlur );
+				} );
+
+				function onInputFocus( ev ) {
+					classie.add( ev.target.parentNode, 'input--filled' );
+				}
+
+				function onInputBlur( ev ) {
+					if( ev.target.value.trim() === '' ) {
+						classie.remove( ev.target.parentNode, 'input--filled' );
+					}
+				}
+        });
+
+    </script>
+</body>
+</html>

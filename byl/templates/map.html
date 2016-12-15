@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Hello, World</title>
+    <style type="text/css">
+        html
+        {
+            height: 100%;
+        }
+        body
+        {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+        #container
+        {
+            width:100%;
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.3"></script>
+</head>
+<body onload="loand()">
+    <div id="container">
+    </div>
+    <input id="lng" type="hidden" runat="server" />
+    <input id="lat" type="hidden" runat="server" />
+
+    <script type="text/javascript">
+
+
+
+
+            function loand() {
+            var map = new BMap.Map("container");
+            var point = new BMap.Point(39.9299857780,116.395645037); //默认中心点
+            var marker = new BMap.Marker(point);
+            {% for key,value in siteinfo.items() %}
+            var point = new BMap.Point({{value[1]}},{{value[0]}}); //默认中心点
+            var marker = new BMap.Marker(point);
+
+            var opts = {
+                width: 20,     // 信息窗口宽度
+                height: 10,     // 信息窗口高度
+                title: '{{key}}'  // 信息窗口标题
+            }
+            map.addOverlay(marker); //标记地图
+            {% endfor %}
+
+
+            map.centerAndZoom(point, 13); //绘制地图
+
+
+            //map.openInfoWindow(infoWindow, map.getCenter());      // 打开信息窗口
+        }
+
+    </script>
+</body>
+</html>

@@ -20,7 +20,7 @@
     var dom = document.getElementById("container");
 var myChart = echarts.init(dom);
     myChart.showLoading();
-$.getJSON('graph.json', function (json) {
+$.getJSON('https://github.com/chenghengchao/SNS/blob/master/echart/graph.json', function (json) {
     myChart.hideLoading();
     myChart.setOption(option = {
         title: {

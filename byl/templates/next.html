@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{{url_for('static', filename='first/js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='second/js/selectFx.js')}}"></script>
+    <script src="{{url_for('static', filename='second/js/classie.js')}}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='second/css/normalize.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='second/css/cs-select.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='second/css/demo.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='second/css/cs-skin-overlay.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='first/css/style.css')}}" />
+
+<style>
+    #button{margin-left:10%;}
+</style>
+
+</head>
+<body class="color-3">
+
+<div class="container">
+ {%
+    for i in range(0,people) %}
+    <div style="margin-left:10%" id="div{{i+1}}">
+<br />
+    <span style="font-size:16px"> 参赛者{{i+1}}：</span>
+        <br />
+
+				<select class="cs-select cs-skin-overlay" id="select{{i+1}}" onchange="alert(1);">
+					<option value="" disabled selected>选择策略</option>
+                    <optgroup label="1">
+                     {% for i in range(0,firstgroup)%}
+						<option value="{{i+1}}">{{strategy[i]}}</option>
+                     {%endfor%}
+					</optgroup>
+
+					<optgroup label="2">
+						{% for i in range(firstgroup,strategycount) %}
+						<option value="{{i+1}}">{{strategy[i]}}</option>
+                        {%endfor%}
+					</optgroup>
+				</select>
+
+        <br />
+
+</div> {%endfor%}
+<input type="hidden" value="{{people}}" id="people" />
+
+    </div>
+<form method="post" action="http://localhost:5000/output" id="form1">
+    <input type="hidden" value="{{people}}" name="people" />
+    <input type="hidden" value="{{time}}" name="rounds" />
+    {% for i in range(0,people) %}
+    <input type="hidden" value="" name="people{{i+1}}" id="people{{i+1}}">
+    {%endfor%}
+    <span class="blank" id="button" >
+            <a  class="btn" >参数选择/开始比赛</a>
+    </span>
+</form>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+	    var people=parseInt($("#people").val());
+
+
+		$("#button").bind("click",function(){
+		    var people=parseInt($("#people").val());
+
+		    for(var i=1;i<=people;i++){
+
+		        $("#people"+i).val($("#select"+i).val());
+		    }
+            $("#form1").submit();
+
+
+		});
+
+	});
+
+  function show(i){
+     alert($("#select"+i).val())
+     if($("#select"+i).val()!=null){
+        $("#div"+(i+1)).show();
+     }
+  }
+(function() {
+				[].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {
+
+					new SelectFx(el, {
+						stickyPlaceholder: false
+					});
+				} );
+
+			})();
+</script>
+</body>
+</html>

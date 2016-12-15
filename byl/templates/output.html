@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>排名</title>
+
+<script src="{{url_for('static', filename='first/js/jquery.min.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='output/css/index.css')}}" />
+</head>
+
+<body>
+
+
+<div class="Top_Record">
+	<div class="record_Top"><p>策略排行榜</p></div>
+    <div class="topRec_List">
+  		<dl>
+        	<dd>排名</dd>
+            <dd>选手</dd>
+        	<dd>策略</dd>
+        	<dd>得分</dd>
+        </dl>
+        <div class="maquee">
+            <ul>
+                {%
+                    for i in range(0,len) %}
+                <li>
+                    <div>{{i+1}}</div>
+                    <div>{{competitors[i]}}</div>
+                    <div>{{keys[i]}}</div>
+                    <div>{{values[i]}}</div>
+
+                </li>
+        {%endfor%}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+
+</script>
+
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+
+</div>
+</body>
+</html>
