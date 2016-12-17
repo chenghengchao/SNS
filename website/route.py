@@ -50,7 +50,9 @@ def detail():
         pic=pathdict['pic']
         address=pathdict['address']
         len1=len(pathdict['name'])
-        return render_template('detail.html',name=name,price=price,intro=intro,special=special,pic=pic,address=address,len=len1)
+        len2=len1/3
+        len3=len1%3
+        return render_template('detail.html',name=name,price=price,intro=intro,special=special,pic=pic,address=address,len=len1,len2=len2,len3=len3)
 
 
 
