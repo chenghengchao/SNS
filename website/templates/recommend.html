@@ -3,15 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/animate.css')}}">
+	<!-- Icomoon Icon Fonts href="{{url_for('static',filename='first/css/component.css')}}"-->
+	<link rel="stylesheet" href="{{url_for('static',filename='css/icomoon.css')}}">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/bootstrap.css')}}">
+	<!-- Superfish -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/superfish.css')}}">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/magnific-popup.css')}}">
+	<!-- Date Picker -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/bootstrap-datepicker.min.css')}}">
+	<!-- CS Select -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/cs-select.css')}}">
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/cs-skin-border.css')}}">
+
+	<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+
 </head>
 <body>
-    <span>{{path}}</span>
-    <form action="/detail" method="post">
-        <input type="hidden" value={{path}} name="path">
-        <input type="submit" value="查看详情">
-    </form>
+    <div id="fh5co-tours" class="fh5co-section-gray">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+						<h3>行程推荐</h3>
+						<p>这是基于您的基本情况，得出的路线推荐，您可查看详情</p>
+					</div>
+				</div>
+				<div class="row">
+                    {% for i in range(0,3) %}
+					<div class="col-md-4 col-sm-6 fh5co-tours animate-box" data-animate-effect="fadeIn">
+						<div href="#"><img src="../static/images/place-{{i+1}}.jpg" alt="Free HTML5 Website Template by " class="img-responsive">
+							<div class="desc">
+								<span></span>
+								<h3>路线1:</h3>
+                                <span class="price">{{path}}</span>
+								<a class="btn btn-primary btn-outline" href="#" onclick="submit({{i}})">查看详情<i class="icon-arrow-right22"></i></a>
+                                <form action="/detail" method="post" id="form{{i}}">
+                                    <input type="hidden" value="{{path}}" name="path">
+                                </form>
+							</div>
+						</div>
+					</div>
+
+                    {%endfor%}
+
+				</div>
+			</div>
+		</div>
 
 
+<script type="text/javascript">
+    function submit(i){
 
+        document.getElementById('form'+i).submit();
+    }
+</script>
 </body>
 </html>

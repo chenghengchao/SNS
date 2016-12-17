@@ -3,24 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+      <link rel="stylesheet" href="{{url_for('static',filename='css/animate.css')}}">
+	<!-- Icomoon Icon Fonts href="{{url_for('static',filename='first/css/component.css')}}"-->
+	<link rel="stylesheet" href="{{url_for('static',filename='css/icomoon.css')}}">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/bootstrap.css')}}">
+	<!-- Superfish -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/superfish.css')}}">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/magnific-popup.css')}}">
+	<!-- Date Picker -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/bootstrap-datepicker.min.css')}}">
+	<!-- CS Select -->
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/cs-select.css')}}">
+	<link rel="stylesheet"  href="{{url_for('static',filename='css/cs-skin-border.css')}}">
+
+	<link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+
 </head>
 <body>
-    <img class="maquee">
-            <ul>
-                {%
-                    for i in range(0,len) %}
-                <li>
-                    <div>{{name[i]}}</div>
-                    <div>{{price[i]}}</div>
-                    <div>{{intro[i]}}</div>
-                    <div>{{special[i]}}</div>
-                    <div>{{address[i]}}</div>
-                    <img src={{pic[i]}} />
+
+<div id="fh5co-blog-section" class="fh5co-section-gray">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center heading-section animate-box">
+						<h3>详情介绍</h3>
+						<p>您可以浏览景点详细信息，包括介绍、费用、时间等，以了解您的行程</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="container">
+
+				<div class="row row-bottom-padded-md">
+                    {%for i in range(0,len) %}
+					<div class="col-lg-4 col-md-4 col-sm-6">
+						<div class="fh5co-blog animate-box">
+							<a href="#"><img class="img-responsive" src="{{pic[i]}}" alt=""></a>
+							<div class="blog-text">
+								<div class="prod-title">
+									<h3><a href="#">{{name[i]}}</a></h3>
+									<p>简介：{{intro[i]}}</p>
+                                    <p>门票：{{price[i]}}</p>
+                                    <p>位置：{{address[i]}}</p>
+                                    <p>特色：{{special[i]}}</p>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+                    {%endfor%}
+
+                   </div>
 
 
-                </li>
-                </ul>
-        {%endfor%}
-      </div>
+
+
+			</div>
+		</div>
 </body>
 </html>

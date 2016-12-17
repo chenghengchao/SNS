@@ -227,7 +227,7 @@ class recommend:
             pathdict["price"].append(detail[2])
             pathdict["intro"].append(detail[3][5:])
             pathdict["special"].append(detail[4])
-            pathdict['pic'].append('../scene_img/'+str(detail[0])+'.jpg')
+            pathdict['pic'].append('../static/scene_img/'+str(detail[0])+'.jpg')
             pathdict['address'].append(detail[5])
 
         return pathdict
