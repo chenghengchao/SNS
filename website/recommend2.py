@@ -268,7 +268,7 @@ class recommend:
                         cur.execute('select edgecost from distance where fromid='+str(fromid)+' and toid='+str(toid))
                         cost=cost+cur.fetchone()[0]
                         if cost<8:
-                            daypath.append(tmpDict[fromid][0])
+                            daypath.append(tmpDict[toid][0])
                     codepath=codepath[len(daypath):]
                     daypaths[i].append('-->'.join(daypath))
                 daypath=[]
