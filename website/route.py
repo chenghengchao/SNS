@@ -28,11 +28,11 @@ def index():
 def recommend1():
     if request.method=='POST':
         day=int(request.form.get('day'))
-        month=int(request.form.get('month'))
+        month=request.form.get('month')
         cost= int(request.form.get('cost'))
         rec=recommend()
-        path=rec.start(day,cost,month)
-        return render_template('recommend.html',path=path)
+        paths,paths_by_day=rec.start(day,cost,month)
+        return render_template('recommend.html',path=paths,path_by_day=paths_by_day,day=day)
 
 
 @app.route('/detail' ,methods=['GET','POST'])

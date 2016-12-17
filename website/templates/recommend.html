@@ -36,11 +36,13 @@
 						<div href="#"><img src="../static/images/place-{{i+1}}.jpg" alt="Free HTML5 Website Template by " class="img-responsive">
 							<div class="desc">
 								<span></span>
-								<h3>路线1:</h3>
-                                <span class="price">{{path}}</span>
+								<h3>路线{{i}}:</h3>
+								{% for t in range(0,day) %}
+                                <span class="price" style="font-size:15px">第{{t+1}}天:{{path_by_day[i][t]}}</span>
+								{%endfor%}
 								<a class="btn btn-primary btn-outline" href="#" onclick="submit({{i}})">查看详情<i class="icon-arrow-right22"></i></a>
                                 <form action="/detail" method="post" id="form{{i}}">
-                                    <input type="hidden" value="{{path}}" name="path">
+                                    <input type="hidden" value="{{path[i]}}" name="path">
                                 </form>
 							</div>
 						</div>

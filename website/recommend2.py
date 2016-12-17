@@ -96,8 +96,8 @@ class recommend:
         conn.close()
 
 
-
-    def getallpath(self,curlist,cost=8):
+#得到最新的路径
+    def getallpath(self,curlist,cost=8,month="01"):
         removelist=[]
         conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
         cur = conn.cursor()
@@ -106,7 +106,7 @@ class recommend:
             flag=False
             path=curlist[i][1:]
             fromid=path[len(path)-1]
-            cur.execute('select toid,edgecost from distance where distance<5 and fromid='+str(fromid)+' order by pagerank desc')
+            cur.execute('select toid,edgecost from distance where distance<10 and fromid='+str(fromid)+' and besttime like "%'+month+'%" order by pagerank desc')
             edges=cur.fetchmany(5)
             for edge in edges:
                 if not edge[0] in path and (curlist[i][0]+edge[1])<cost:
@@ -127,7 +127,7 @@ class recommend:
         else:
             return curlist,True
 
-
+#景点去重，同时去掉时间花费
     def duplicatepath(self,allpath):
         for i in range(0,len(allpath)):
             allpath[i]=allpath[i][1:]
@@ -159,23 +159,28 @@ class recommend:
                 minpath=path
         return minpath,min
 
-    def getmaximportant(self,tmpDict,allpath):
+    def getmaximportant(self,tmpDict,allpath,totalcost):
+        max = 0
+        maxpath = ''
+        code_path=''
         for i in allpath:
             path=[]
-            max=0
+            pagerank=0
             cost=0
-            maxpath=''
+
             for scene in i:
 
                 path.append(tmpDict[scene][0])
-                cost=cost+tmpDict[scene][2]
+                pagerank=pagerank+tmpDict[scene][2]
+                cost=cost+tmpDict[scene][1]
             path='-->'.join(path)
-            cost=cost/len(i)
-            print cost
-            if cost>max:
-                max=cost
+            pagerank=pagerank/len(i)
+            #print pagerank,cost,max
+            if pagerank>max and cost<totalcost:
+                max=pagerank
                 maxpath=path
-        return maxpath
+                code_path=i
+        return maxpath,code_path
 
 
     def getDataFromDb(self):
@@ -193,7 +198,7 @@ class recommend:
             fromid = res[0]
 
 
-            cur.execute("select name,price,pagerank from modify_scenes_v1 where id= " + str(fromid))
+            cur.execute("select name,price,pagerank,modify_besttime,playtime from modify_scenes_v1 where id= " + str(fromid))
             tmpRs = cur.fetchall()
             for rs in tmpRs:
                 price =rs[1]
@@ -202,8 +207,10 @@ class recommend:
                 else:
                     price=0
                 pagerank=float(rs[2])
+                besttime=rs[3]
+                playtime=rs[4]
 
-                fromNodeList[fromid]=[rs[0],price,pagerank]
+                fromNodeList[fromid]=[rs[0],price,pagerank,besttime,playtime]
 
         # for i, j in fromNodeList.items():
         #     print i, j
@@ -231,6 +238,50 @@ class recommend:
             pathdict['address'].append(detail[5])
 
         return pathdict
+    #将得到的总路径分解
+    def getdaypath(self,tmpDict,days,paths):
+        print paths
+        daypaths={0:[],1:[],2:[]}
+        conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
+        cur = conn.cursor()
+        conn.select_db('sns')
+        if days==1:
+            for i in range(0,3):
+                path=paths[i]
+                daypath=[]
+                for scene in path:
+                    daypath.append(tmpDict[scene][0])
+                daypaths[i].append('-->'.join(daypath))
+
+        else:
+            for i in range(0,3):
+                codepath=paths[i]
+                for day in range(1,days):
+                    daypath=[]
+                    cost=0
+                    for t in range(len(codepath)-1):
+                        fromid=codepath[t]
+                        toid=codepath[t+1]
+                        if cost==0:
+                            cost=cost+tmpDict[fromid][4]
+                            daypath.append(tmpDict[fromid][0])
+                        cur.execute('select edgecost from distance where fromid='+str(fromid)+' and toid='+str(toid))
+                        cost=cost+cur.fetchone()[0]
+                        if cost<8:
+                            daypath.append(tmpDict[fromid][0])
+                    codepath=codepath[len(daypath):]
+                    daypaths[i].append('-->'.join(daypath))
+                daypath=[]
+                for scene in codepath:
+                    daypath.append(tmpDict[scene][0])
+                daypaths[i].append('-->'.join(daypath))
+        print daypaths
+        return daypaths
+
+
+
+
+
 
 
     def start(self,days,cost,month):
@@ -245,24 +296,39 @@ class recommend:
         # print isequal(a, d)
         # print isequal(a, e)
         # getDataFromDb()
+        conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
+        cur = conn.cursor()
+        conn.select_db('sns')
+        cur.execute('select id,name,playtime from modify_scenes_v1 where modify_besttime like "%'+month+'%" order by pagerank desc ')
+        result=cur.fetchmany(3)
+
+        cur.close()
+        conn.close()
         tmpDict = self.getDataFromDb()
         print tmpDict
-        allpath=[[2,6]]
-        flag=True
-        temp=allpath
-        while flag:
-            allpath,flag=self.getallpath(temp,days*8)
-
+        paths=[]
+        code_paths=[]
+        for one in result:
+            allpath=[[one[2],one[0]]]
+            flag=True
             temp=allpath
+            while flag:
+                allpath,flag=self.getallpath(temp,days*8,month)
+
+                temp=allpath
 
 
-        allpath=self.duplicatepath(allpath)
-        mincostpath,mincost=self.getmincost(tmpDict,allpath)
-        maximportantpath=self.getmaximportant(tmpDict,allpath)
+            allpath=self.duplicatepath(allpath)
+            #mincostpath,mincost=self.getmincost(tmpDict,allpath)
+            maximportantpath,code_path=self.getmaximportant(tmpDict,allpath,cost)
 
-        print mincostpath
-        print maximportantpath
-        return maximportantpath
+
+            print maximportantpath,code_path
+            paths.append(maximportantpath)
+            code_paths.append(code_path)
+        path_by_day=self.getdaypath(tmpDict,days,code_paths)
+        print path_by_day
+        return paths,path_by_day
 
         #dateupdate()
 

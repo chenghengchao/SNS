@@ -56,5 +56,23 @@ def isAppear():
     cur.close()
     conn.close()
 
+def updatedb():
+    conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
+    cur = conn.cursor()
+    conn.select_db('sns')
+    scenedict={}
+    cur.execute('select id,modify_besttime from modify_scenes_v1')
+    results=cur.fetchall()
+    for one in results:
+        scenedict[one[0]]=one[1]
+    cur.execute('select id,toid from distance')
+    results=cur.fetchall()
+    for one in results:
+        cur.execute('update distance set besttime="'+scenedict[one[1]]+'" where id='+str(one[0]))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 if __name__ == '__main__':
-    isAppear()
+    updatedb()
