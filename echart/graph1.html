@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+       <script type="text/javascript">
+
+
+
+
+    var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+    myChart.showLoading();
+var json={"nodes": [{"color": "#00C957", "label": "2", "attributes": {}, "y": 41.5647904052, "x": 129.100419319, "id": "2", "size": 26.98823289},{"color": "#00FFFF", "label": "20", "attributes": {}, "y": 45.7068445227, "x": 128.589150073, "id": "20", "size": 25.14161691},{"color": "#00FFFF", "label": "9", "attributes": {}, "y": 44.7943280538, "x": 165.221486036, "id": "9", "size": 20.67875193},{"color": "#00FFFF", "label": "15", "attributes": {}, "y": 56.0647776664, "x": 155.540036202, "id": "15", "size": 17.23259613},{"color": "#DA70D6", "label": "11", "attributes": {}, "y": 49.5646038497, "x": 118.797239142, "id": "11", "size": 16.24002345},{"color": "#FF9912", "label": "4", "attributes": {}, "y": 55.6616072666, "x": 158.119236227, "id": "4", "size": 14.91599904},{"color": "#FF9912", "label": "17", "attributes": {}, "y": 58.4626353704, "x": 160.864238542, "id": "17", "size": 14.63640444},{"color": "#DA70D6", "label": "12", "attributes": {}, "y": 48.5791747667, "x": 162.160462324, "id": "12", "size": 13.72527705},{"color": "#FF9912", "label": "10", "attributes": {}, "y": 53.762630518, "x": 118.146079661, "id": "10", "size": 13.10465076},{"color": "#FF6100", "label": "1", "attributes": {}, "y": 58.3478469339, "x": 155.069155974, "id": "1", "size": 10.85092239}], "edges":[{"sourceID": "1", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "1", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "17", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "20", "size": 1},{"sourceID": "2", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "1", "size": 1},{"sourceID": "4", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "2", "size": 1},{"sourceID": "9", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "4", "size": 1},{"sourceID": "10", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "9", "size": 1},{"sourceID": "11", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "10", "size": 1},{"sourceID": "12", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "11", "size": 1},{"sourceID": "17", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "12", "size": 1},{"sourceID": "20", "attributes": {}, "targetID": "17", "size": 1}]}
+
+    myChart.hideLoading();
+    myChart.setOption(option = {
+    title: {
+        text: 'Graph 简单示例'
+    },
+    tooltip: {},
+    animationDurationUpdate: 1500,
+    animationEasingUpdate: 'quinticInOut',
+    series : [
+        {
+            type: 'graph',
+            layout: 'none',
+            symbolSize: 50,
+            roam: true,
+            label: {
+                normal: {
+                    show: true
+                }
+            },
+            edgeSymbol: ['circle', 'arrow'],
+            edgeSymbolSize: [4, 10],
+            edgeLabel: {
+                normal: {
+                    textStyle: {
+                        fontSize: 20
+                    }
+                }
+            },
+            data: [{
+                name: '节点1',
+                x: 300,
+                y: 300
+            }, {
+                name: '节点2',
+                x: 800,
+                y: 300
+            }, {
+                name: '节点3',
+                x: 550,
+                y: 100
+            }, {
+                name: '节点4',
+                x: 550,
+                y: 500
+            }],
+            // links: [],
+            links: [{
+                source: 0,
+                target: 1,
+                value:10,
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        width: 5,
+                        curveness: 0.2
+                    }
+                },
+                
+
+            }, {
+                source: '节点2',
+                target: '节点1',
+                value : 12,
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                lineStyle: {
+                    normal: { curveness: 0.2 }
+                }
+            }, {
+                source: '节点1',
+                target: '节点3'
+            }, {
+                source: '节点3',
+                target: '节点1'
+            },{
+                source: '节点2',
+                target: '节点3'
+            }, {
+                source: '节点2',
+                target: '节点4'
+            }, {
+                source: '节点1',
+                target: '节点4'
+            }],
+            lineStyle: {
+                normal: {
+                    opacity: 0.9,
+                    width: 2,
+                    curveness: 0
+                }
+            }
+        }
+    ]
+});
+
+
+       </script>
+   </body>
+</html>
