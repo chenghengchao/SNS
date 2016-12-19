@@ -11,7 +11,7 @@ def getjson():
     cur = conn.cursor()
     conn.select_db('sns')
     # cur.execute("insert into sns.distance(fromid, toid, distance) values('%d', '%d', '%f')" % (tmplat + 1, tmplng + 1, float(distance)))
-    cur.execute('select id,name,reallng,reallat,pagerank from modify_scenes_v1 order by pagerank desc limit 10')
+    cur.execute('select id,name,reallng,reallat,pagerank from modify_scenes_v1 order by pagerank desc limit 10 and name')
     results=cur.fetchall()
     #{"nodes": [{"color": "#4f19c7", "label": "jquery", "attributes": {}, "y": -404.26147, "x": -739.36383, "id": "jquery", "size": 4.7252817}
     jsonstr='{"nodes": ['
