@@ -28,7 +28,7 @@ def getjson():
         node.append(str(id))
         color=colors[int(random.random()*5)]
 
-        onenode="{name: '"+name+"',x:"+str(lng)+" ,y: "+str(lat)+"},"
+        onenode="{name: '"+name+"',x:"+str(lng)+" ,y: "+str(lat)+",symbolSize:100},"
         jsonstr=jsonstr+onenode
     nodes=','.join(node)
     jsonstr=jsonstr[:-1]+"], links: ["
