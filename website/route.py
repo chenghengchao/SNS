@@ -30,8 +30,11 @@ def recommend1():
         day=int(request.form.get('day'))
         month=request.form.get('month')
         cost= int(request.form.get('cost'))
+        start1=int(request.form.get('start'))
+        print start1
+        print start1
         rec=recommend()
-        paths,paths_by_day=rec.start(day,cost,month)
+        paths,paths_by_day=rec.start(day,cost,month,start1)
         return render_template('recommend.html',path=paths,path_by_day=paths_by_day,day=day)
 
 

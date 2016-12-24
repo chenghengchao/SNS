@@ -174,7 +174,8 @@ class recommend:
                 pagerank=pagerank+tmpDict[scene][2]
                 cost=cost+tmpDict[scene][1]
             path='-->'.join(path)
-            pagerank=pagerank/len(i)
+            #pagerank=pagerank/len(i)
+
             #print pagerank,cost,max
             if pagerank>max and cost<totalcost:
                 max=pagerank
@@ -182,6 +183,53 @@ class recommend:
                 code_path=i
         return maxpath,code_path
 
+    def getaveragemaximportant(self,tmpDict,allpath,totalcost):
+        max = 0
+        maxpath = ''
+        code_path=''
+        for i in allpath:
+            path=[]
+            pagerank=0
+            cost=0
+
+            for scene in i:
+
+                path.append(tmpDict[scene][0])
+                pagerank=pagerank+tmpDict[scene][2]
+                cost=cost+tmpDict[scene][1]
+            path='-->'.join(path)
+            pagerank=pagerank/len(i)
+
+            #print pagerank,cost,max
+            if pagerank>max and cost<totalcost:
+                max=pagerank
+                maxpath=path
+                code_path=i
+        return maxpath,code_path
+
+    def getminicost(self,tmpDict,allpath,totalcost):
+        min = 100000
+        maxpath = ''
+        code_path=''
+        for i in allpath:
+            path=[]
+            pagerank=0
+            cost=0
+
+            for scene in i:
+
+                path.append(tmpDict[scene][0])
+                pagerank=pagerank+tmpDict[scene][2]
+                cost=cost+tmpDict[scene][1]
+            path='-->'.join(path)
+            pagerank=pagerank/len(i)
+
+            #print pagerank,cost,max
+            if cost<min and cost<totalcost:
+                main=cost
+                maxpath=path
+                code_path=i
+        return maxpath,code_path
 
     def getDataFromDb(self):
         conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
@@ -284,7 +332,7 @@ class recommend:
 
 
 
-    def start(self,days,cost,month):
+    def start(self,days,cost,month,start1):
         #
         # a = [[1, 2, 3], [4, 5, 6]]
         # b = [[1, 2, 3], [4, 5, 6]]
@@ -299,38 +347,80 @@ class recommend:
         conn = MySQLdb.connect(host='202.112.113.203', user='sxw', passwd='0845', port=3306, charset='utf8')
         cur = conn.cursor()
         conn.select_db('sns')
-        cur.execute('select id,name,playtime from modify_scenes_v1 where modify_besttime like "%'+month+'%" order by pagerank desc ')
-        result=cur.fetchmany(3)
-
-        cur.close()
-        conn.close()
         tmpDict = self.getDataFromDb()
-        print tmpDict
-        paths=[]
-        code_paths=[]
-        for one in result:
-            allpath=[[one[2],one[0]]]
-            flag=True
-            temp=allpath
-            while flag:
-                allpath,flag=self.getallpath(temp,days*8,month)
+        paths = []
+        code_paths = []
+        if start1==0:
 
+            cur.execute('select id,name,playtime from modify_scenes_v1 where modify_besttime like "%'+month+'%" order by pagerank desc ')
+
+            result=cur.fetchmany(3)
+
+            cur.close()
+            conn.close()
+
+
+
+            for one in result:
+                allpath=[[one[2],one[0]]]
+                flag=True
                 temp=allpath
+                while flag:
+                    allpath,flag=self.getallpath(temp,days*10,month)
+
+                    temp=allpath
 
 
-            allpath=self.duplicatepath(allpath)
-            #mincostpath,mincost=self.getmincost(tmpDict,allpath)
-            maximportantpath,code_path=self.getmaximportant(tmpDict,allpath,cost)
+                allpath=self.duplicatepath(allpath)
+                #mincostpath,mincost=self.getmincost(tmpDict,allpath)
+                maximportantpath,code_path=self.getmaximportant(tmpDict,allpath,cost)
 
 
-            print maximportantpath,code_path
+                print maximportantpath,code_path
+                paths.append(maximportantpath)
+                code_paths.append(code_path)
+        else:
+            cur.execute('select id,name,playtime from modify_scenes_v1 where id='+str(start1))
+            result=cur.fetchone()
+            playtime=result[2]
+            allpath = [[playtime,start1]]
+            flag = True
+            temp = allpath
+            while flag:
+                allpath, flag = self.getallpath(temp, days * 8, month)
+                temp = allpath
+            allpath = self.duplicatepath(allpath)
+            maximportantpath, code_path = self.getmaximportant(tmpDict, allpath, cost)
+            print maximportantpath, code_path
             paths.append(maximportantpath)
             code_paths.append(code_path)
+            allpath.remove(code_path)
+            print allpath
+            maximportantpath, code_path = self.getaveragemaximportant(tmpDict, allpath, cost)
+            print maximportantpath, code_path
+            paths.append(maximportantpath)
+            code_paths.append(code_path)
+            allpath.remove(code_path)
+            print allpath
+            maximportantpath, code_path = self.getminicost(tmpDict, allpath, cost)
+            print maximportantpath, code_path
+            paths.append(maximportantpath)
+            code_paths.append(code_path)
+            allpath.remove(code_path)
+
+
+
+
+
         path_by_day=self.getdaypath(tmpDict,days,code_paths)
         print path_by_day
         return paths,path_by_day
 
         #dateupdate()
+
+
+#rec=recommend()
+#rec.start(2,10000,'12',19)
 
 
 
